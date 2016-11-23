@@ -22,7 +22,7 @@ def watch_camera(name=0):
     cap = cv2.VideoCapture(0)
     vector_field = []
     movements = []
-    min_area = 15000
+    min_area = 18000
     lastFrame = prev_center = None
     moving_object_in_view = False
     frame_size = (1500, 900)

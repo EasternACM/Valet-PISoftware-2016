@@ -6,7 +6,7 @@ frame_size = (1200, 800)
 
 
 def capture(input = 0):
-    dilation_kernal = np.ones((26,26), np.uint8)
+    dilation_kernal = np.ones((32,32), np.uint8)
 
     cap = cv2.VideoCapture(input)
     previous_frame = current_frame = next_frame = None
@@ -40,11 +40,11 @@ def capture(input = 0):
 
         d1 = cv2.absdiff(previous_frame, next_frame)
         d2 = cv2.absdiff(current_frame, next_frame)
-        andResult = result = cv2.bitwise_and(d1, d2)
+        result = cv2.bitwise_and(d1, d2)
 
-        andResult = result = cv2.threshold(result, 5, 255, cv2.THRESH_BINARY)[1]
+        result = cv2.threshold(result, 5, 255, cv2.THRESH_BINARY)[1]
 
-        andResult = cv2.dilate(result, dilation_kernal, iterations=1)
+        result = cv2.dilate(result, dilation_kernal, iterations=5)
 
         (_, contours, _) = cv2.findContours(result.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE) #function is destructive, copy frame
 
@@ -52,7 +52,7 @@ def capture(input = 0):
             (x, y, w, h) = cv2.boundingRect(c)  # generating too many of these
             cv2.rectangle(original, (x, y), (x + w, y + h), (0, 255, 0), 2)  # draw rectangle TODO remove magic numbers
 
-        cv2.imshow('frame', andResult)
+        cv2.imshow('Motion Capture', original)
 
         if (cv2.waitKey(1) & 0xFF == ord('q')):
             break  # q to exit feedq
